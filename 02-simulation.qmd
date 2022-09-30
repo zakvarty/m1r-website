@@ -1,0 +1,8 @@
+---
+title: "Workshop 2: Simulation"
+bibliography: references.bib
+---
+
+In the first workshop we met the formal definition of the Poisson process and considered some of the properties that follow from this definition. 
+
+In this workshop we will see how those properties can be used to simulate realisations of the point process. We will write our own R functions to generate point patterns from a given Poisson process. 

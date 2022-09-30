@@ -1,0 +1,7 @@
+---
+title: "Workshop 4: Applications and Extensions"
+bibliography: references.bib
+---
+
+In this final workshop we will explore some of the areas in which Poisson processes are used. We will then consider a few of the ways that we might want to relax the strong modelling assumptions that are made by a Poisson process.
+

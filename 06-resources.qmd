@@ -1,0 +1,8 @@
+---
+title: "Resources"
+bibliography: references.bib
+---
+
+A collection of resources to support your exploration of point process models. 
+
+

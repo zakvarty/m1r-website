@@ -1,0 +1,30 @@
+project:
+  type: website
+
+website:
+  title: "M1R"
+  navbar:
+    right:
+      - href: index.qmd
+        text: Home
+      - href: 01-theory.qmd
+        text: WS1 - Theory
+      - href: 02-simulation.qmd
+        text: WS2 - Simulation
+      - href: 03-inference.qmd
+        text: WS3 - Inference
+      - href: 04-applications.qmd
+        text: WS4 - Applications
+      - href: 05-questions.qmd
+        text: Questions
+      - href: 06-resources.qmd
+        text: Resources
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+
+

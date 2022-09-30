@@ -1,0 +1,34 @@
+---
+title: "Questions"
+bibliography: references.bib
+---
+
+You might find the following questions useful starting points for testing your understanding of point process models. 
+
+
+1. How you would simulate one realisation from a homogeneous Poisson process on the one
+dimensional interval $[t_\text{min}, t_{max}]$?
+
+2. Describe how you would simulate one realisation from a Poisson process in one dimension with a quartic polynomial intensity function over the interval $[t_\text{min}, t_{max}]$ by:
+
+- generating inter-arrival times;
+- rejection sampling;
+- using a piecewise constant approximation of $\lambda(t)$.
+
+> What other methods might you use?
+
+3. Can you write pseudo-code for each of the approaches in question 2? Have you written R or Python code for any/all of the approaches in question 2? 
+
+4. Suppose you have observed the point pattern $(x_1,...,x_n)$ on the interval $[x_\text{min}, x_{max}]$ and you wish to model the intensity function $\lambda(x)$ as a polynomial function. Write down the likelihood and log-likelihood of the observed point pattern when modelling the intensity using a cubic polynomial.
+
+5. How would your answer to 4 change if you instead modelled $\lambda(t)$ as a quadratic polynomial? 
+
+6. How could you test whether a cubic term improves the fit of your model? 
+
+7. Generate a point pattern with a cubic intensity function. Find point estimates and confidence intervals for the polynomial coefficients.
+
+8. How might you visually represent the uncertainty in your estimated intensity function? 
+9. How could you measure whether a point pattern is more or less clustered than a Poisson process?
+
+10. How could you test whether a point pattern is Poisson, more clustered or more regular?
+

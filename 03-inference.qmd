@@ -1,0 +1,9 @@
+---
+title: "Workshop 3: Inference"
+bibliography: references.bib
+---
+
+In the previous workshop we considered how to generate realisations from a given point process when we know its intensity function. 
+
+In this workshop we will consider the reverse problem: given one (or more) point patterns generated from a Poisson process, how can we estimate the unknown intensity that generated those points? 
+

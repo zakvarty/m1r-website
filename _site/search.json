@@ -1,0 +1,51 @@
+[
+  {
+    "objectID": "05-questions.html",
+    "href": "05-questions.html",
+    "title": "Questions",
+    "section": "",
+    "text": "How you would simulate one realisation from a homogeneous Poisson process on the one dimensional interval \\([t_\\text{min}, t_{max}]\\)?\nDescribe how you would simulate one realisation from a Poisson process in one dimension with a quartic polynomial intensity function over the interval \\([t_\\text{min}, t_{max}]\\) by:\n\n\ngenerating inter-arrival times;\nrejection sampling;\nusing a piecewise constant approximation of \\(\\lambda(t)\\).\n\n\nWhat other methods might you use?\n\n\nCan you write pseudo-code for each of the approaches in question 2? Have you written R or Python code for any/all of the approaches in question 2?\nSuppose you have observed the point pattern \\((x_1,...,x_n)\\) on the interval \\([x_\\text{min}, x_{max}]\\) and you wish to model the intensity function \\(\\lambda(x)\\) as a polynomial function. Write down the likelihood and log-likelihood of the observed point pattern when modelling the intensity using a cubic polynomial.\nHow would your answer to 4 change if you instead modelled \\(\\lambda(t)\\) as a quadratic polynomial?\nHow could you test whether a cubic term improves the fit of your model?\nGenerate a point pattern with a cubic intensity function. Find point estimates and confidence intervals for the polynomial coefficients.\nHow might you visually represent the uncertainty in your estimated intensity function?\nHow could you measure whether a point pattern is more or less clustered than a Poisson process?\nHow could you test whether a point pattern is Poisson, more clustered or more regular?"
+  },
+  {
+    "objectID": "04-applications.html",
+    "href": "04-applications.html",
+    "title": "Workshop 4: Applications and Extensions",
+    "section": "",
+    "text": "In this final workshop we will explore some of the areas in which Poisson processes are used. We will then consider a few of the ways that we might want to relax the strong modelling assumptions that are made by a Poisson process."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "M1R",
+    "section": "",
+    "text": "To learn more about Quarto websites visit https://quarto.org/docs/websites."
+  },
+  {
+    "objectID": "06-resources.html",
+    "href": "06-resources.html",
+    "title": "Resources",
+    "section": "",
+    "text": "A collection of resources to support your exploration of point process models."
+  },
+  {
+    "objectID": "01-theory.html",
+    "href": "01-theory.html",
+    "title": "Workshop 1: Theory",
+    "section": "",
+    "text": "We will explore in detail one of the simplest but most widely used examples of a stochastic point process, known as the Poisson process. We will consider in detail the one-dimensional Poisson process and derive some of its key properties."
+  },
+  {
+    "objectID": "02-simulation.html",
+    "href": "02-simulation.html",
+    "title": "Workshop 2: Simulation",
+    "section": "",
+    "text": "In this workshop we will see how those properties can be used to simulate realisations of the point process. We will write our own R functions to generate point patterns from a given Poisson process."
+  },
+  {
+    "objectID": "03-inference.html",
+    "href": "03-inference.html",
+    "title": "Workshop 3: Inference",
+    "section": "",
+    "text": "In this workshop we will consider the reverse problem: given one (or more) point patterns generated from a Poisson process, how can we estimate the unknown intensity that generated those points?"
+  }
+]
