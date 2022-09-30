@@ -1,7 +1,33 @@
 ---
-title: "M1R"
+title: "Exploring Stochastic Point Processes"
 ---
 
-This is a Quarto website.
+# Welcome 
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+This website contains materials to guide a first exploration of stochastic point processes. 
+
+These materials focus mainly on the Poisson process in one dimension. This is considered both as a special example of a stochastic process and also as a statistical model for point pattern data.
+
+These materials were created by [Zak Varty](https://www.zakvarty.com) as a starting point for undergraduate research projects at Imperial College London. The intended reader is an undergraduate student at the end of their first year of study, who is familiar with the basics of probability and statistical inference and has some programming experience. The materials might also be useful to anyone with a similar background who is learning about point process models for the first time. 
+
+# Attribution
+
+If you use these resources in your work, please cite them as follows or use the BibTeX entry provided below.
+
+> Varty, Z.  (2022). Exploring Stochastic Point Processes [Course materials]. https://m1r.zakvarty.com/. 
+
+```
+@online{varty2022exploring,
+  author = {Zak Varty},
+  title = {Exploring {S}tochastic {P}oint {P}rocesses},
+  year = {2022},
+  url = {https://m1r.zakvarty.com/}
+}
+```
+
+# License 
+
+The content of this website is published under the [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/) license. This license lets you **distribute, remix, adapt, and build upon this work, even commercially**, on the condition that you **give appropriate credit, provide a link to the license, and indicate if changes were made**. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. 
+
+# About this Website
+This website was built using Quarto. To learn more about Quarto websites visit <https://quarto.org/docs/websites>.

@@ -16,9 +16,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "M1R",
+    "title": "Exploring Stochastic Point Processes",
     "section": "",
-    "text": "To learn more about Quarto websites visit https://quarto.org/docs/websites."
+    "text": "Attribution\nIf you use these resources in your work, please cite them as follows or use the BibTeX entry provided below.\n\nVarty, Z. (2022). Exploring Stochastic Point Processes [Course materials]. https://m1r.zakvarty.com/.\n\n@online{varty2022exploring,\n  author = {Zak Varty},\n  title = {Exploring {S}tochastic {P}oint {P}rocesses},\n  year = {2022},\n  url = {https://m1r.zakvarty.com/}\n}\n\n\nLicense\nThe content of this website is published under the Creative Commons Attribution 4.0 International license. This license lets you distribute, remix, adapt, and build upon this work, even commercially, on the condition that you give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.\n\n\nAbout this Website\nThis website was built using Quarto. To learn more about Quarto websites visit https://quarto.org/docs/websites."
   },
   {
     "objectID": "06-resources.html",
@@ -32,7 +32,7 @@
     "href": "01-theory.html",
     "title": "Workshop 1: Theory",
     "section": "",
-    "text": "We will explore in detail one of the simplest but most widely used examples of a stochastic point process, known as the Poisson process. We will consider in detail the one-dimensional Poisson process and derive some of its key properties."
+    "text": "We will explore in detail one of the simplest but most widely used examples of a stochastic point process, known as the Poisson process. We will consider in detail the one-dimensional Poisson process and derive some of its key properties.\n{packages}"
   },
   {
     "objectID": "02-simulation.html",
@@ -40,13 +40,6 @@
     "title": "Workshop 2: Simulation",
     "section": "",
     "text": "In the first workshop we met the formal definition of the Poisson process and considered some of the properties that follow from this definition.\nIn this workshop we will see how those properties can be used to simulate realisations of the point process. We will write our own R functions to generate point patterns from a given Poisson process."
-  },
-  {
-    "objectID": "03-inference.html",
-    "href": "03-inference.html",
-    "title": "Workshop 3: Inference",
-    "section": "",
-    "text": "In the previous workshop we considered how to generate realisations from a given point process when we know its intensity function.\nIn this workshop we will consider the reverse problem: given one (or more) point patterns generated from a Poisson process, how can we estimate the unknown intensity that generated those points?\n\n\n\nlambda <- function(theta, time){\n theta[1] * sin(time) + theta[2]\n}\n\nLambda <- function(theta, time){\n - theta[1] * cos(time) + theta[2] * time \n}\n\n\nt_min <- pi\nt_max <- 5*pi \ntheta_true = c(40, 50)\nlambda_max <- 90\n\nt <- seq(t_min, t_max, length.out = 1001)\nlambda_vals <- lambda(theta = theta_true, time =  t)\n\nplot(t, lambda_vals, type = \"l\", lwd = 2, ylim = c(0,100))\n\n\n\n\n\nn_homo <- rpois(n = 1, lambda = lambda_max * (t_max - t_min))\nx_homo <- runif(n = n_homo, min = t_min, max = t_max)\n\nLambda_A <- Lambda(theta_true, t_max) - Lambda(theta_true, t_min)\nprob_keep <- lambda(theta = theta_true, time = x_homo) / lambda_max\nis_kept <- rbinom(n = n_homo, size = 1, prob = prob_keep)\n\nx_inhomo <- x_homo[is_kept == 1]\nn_inhomo <- length(x_inhomo)\n\nplot(t, lambda_vals, type = \"l\", lwd = 2, ylim = c(0,100)) \npoints(x = x_inhomo, y = rep(0, n_inhomo), pch = 16, col = rgb(0,0,0,0.2))\n\n\n\n\n\n# Negative log-liklihood \n\nnllh_ihpp <- function(theta, x, A){\n  if(theta[1] > theta[2]) return(1e8)\n  \n  # Integral term \n  Lambda_term <- Lambda(theta, A[2]) - Lambda(theta, A[1])\n  # Intensity term\n  lambda_term <- - sum(log(lambda(theta, time = x))) \n  #\n  \n  return(lambda_term + Lambda_term)\n}\n\n# Evaluate for lambda = 0 * sin(t) + 5\nnllh_ihpp( theta = c(0, 5), x = x_inhomo, A = c(pi, 5*pi))\n\n[1] -944.6763\n\n\n\nopt <- optim(\n  par = c(0,5), # starting parameter values\n  fn = nllh_ihpp,\n  method = \"L-BFGS-B\",\n  hessian = TRUE,\n  A = c(t_min, t_max),\n  x = x_inhomo\n  )\n\nopt\n\n$par\n[1] 36.66265 49.81543\n\n$value\n[1] -1916.122\n\n$counts\nfunction gradient \n      13       13 \n\n$convergence\n[1] 0\n\n$message\n[1] \"CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH\"\n\n$hessian\n           [,1]       [,2]\n[1,]  0.2291052 -0.1686144\n[2,] -0.1686144  0.3763540\n\n\n\nfitted_intensity <- lambda(theta = opt$par, time = t)\n\nplot(t, lambda_vals, type = \"l\", lwd = 2, ylim = c(0,100)) \npoints(x = x_inhomo, y = rep(0, n_inhomo), pch = 16) \nlines(t, fitted_intensity, col = 2, type = \"l\", lwd = 2, ylim = c(0,10))\n\n\n\n\n\\[\\hat \\theta \\sim MVN(\\theta, I^{-1}(\\theta)) \\]\n\\[\\hat \\theta - \\theta \\sim MVN(0, I^{-1}(\\theta)) \\]\n\\[\\hat \\theta - \\theta \\sim MVN(0, I_O^{-1}(\\hat\\theta)) \\]\n\\[\\hat \\theta - \\theta \\sim MVN(0, - H^{-1}(\\theta)) \\]\n\nmle_samples <- mgcv::rmvn(n = 1000, mu = opt$par, V = solve(opt$hessian))\nplot(mle_samples, xlab = \"a\", ylab = \"b\")\n\n\n\n\n\nplot(t, lambda_vals, type = \"l\", lwd = 2, ylim = c(0,100))  \nfor (i in 1:1000){\n  lines(t, lambda(mle_samples[i,], t), type = \"l\", lwd = 2, ylim = c(0,10), col = rgb(1,0,0,0.01))\n}\nlines(t, lambda_vals,  lwd = 2)  \n\n\n\n\n\nplot(density(x_inhomo))\nlines(t, lambda_vals/(Lambda_A), col = 2, type = \"l\", lwd = 2)"
   },
   {
     "objectID": "02-simulation.html#content",
@@ -131,5 +124,12 @@
     "title": "Workshop 2: Simulation",
     "section": "Implementation",
     "text": "Implementation\nExercise for second part of session."
+  },
+  {
+    "objectID": "03-inference.html",
+    "href": "03-inference.html",
+    "title": "Workshop 3: Inference",
+    "section": "",
+    "text": "In the previous workshop we considered how to generate realisations from a given point process when we know its intensity function.\nIn this workshop we will consider the reverse problem: given one (or more) point patterns generated from a Poisson process, how can we estimate the unknown intensity that generated those points?\n\n\n\nlambda <- function(theta, time){\n theta[1] * sin(time) + theta[2]\n}\n\nLambda <- function(theta, time){\n - theta[1] * cos(time) + theta[2] * time \n}\n\n\nt_min <- pi\nt_max <- 5*pi \ntheta_true = c(40, 50)\nlambda_max <- 90\n\nt <- seq(t_min, t_max, length.out = 1001)\nlambda_vals <- lambda(theta = theta_true, time =  t)\n\nplot(t, lambda_vals, type = \"l\", lwd = 2, ylim = c(0,100))\n\n\n\n\n\nn_homo <- rpois(n = 1, lambda = lambda_max * (t_max - t_min))\nx_homo <- runif(n = n_homo, min = t_min, max = t_max)\n\nLambda_A <- Lambda(theta_true, t_max) - Lambda(theta_true, t_min)\nprob_keep <- lambda(theta = theta_true, time = x_homo) / lambda_max\nis_kept <- rbinom(n = n_homo, size = 1, prob = prob_keep)\n\nx_inhomo <- x_homo[is_kept == 1]\nn_inhomo <- length(x_inhomo)\n\nplot(t, lambda_vals, type = \"l\", lwd = 2, ylim = c(0,100)) \npoints(x = x_inhomo, y = rep(0, n_inhomo), pch = 16, col = rgb(0,0,0,0.2))\n\n\n\n\n\n# Negative log-liklihood \n\nnllh_ihpp <- function(theta, x, A){\n  if(theta[1] > theta[2]) return(1e8)\n  \n  # Integral term \n  Lambda_term <- Lambda(theta, A[2]) - Lambda(theta, A[1])\n  # Intensity term\n  lambda_term <- - sum(log(lambda(theta, time = x))) \n  #\n  \n  return(lambda_term + Lambda_term)\n}\n\n# Evaluate for lambda = 0 * sin(t) + 5\nnllh_ihpp( theta = c(0, 5), x = x_inhomo, A = c(pi, 5*pi))\n\n[1] -878.6893\n\n\n\nopt <- optim(\n  par = c(0,5), # starting parameter values\n  fn = nllh_ihpp,\n  method = \"L-BFGS-B\",\n  hessian = TRUE,\n  A = c(t_min, t_max),\n  x = x_inhomo\n  )\n\nopt\n\n$par\n[1] 35.02663 46.55281\n\n$value\n[1] -1750.902\n\n$counts\nfunction gradient \n      14       14 \n\n$convergence\n[1] 0\n\n$message\n[1] \"CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH\"\n\n$hessian\n           [,1]       [,2]\n[1,]  0.2493894 -0.1876421\n[2,] -0.1876421  0.4111211\n\n\n\nfitted_intensity <- lambda(theta = opt$par, time = t)\n\nplot(t, lambda_vals, type = \"l\", lwd = 2, ylim = c(0,100)) \npoints(x = x_inhomo, y = rep(0, n_inhomo), pch = 16) \nlines(t, fitted_intensity, col = 2, type = \"l\", lwd = 2, ylim = c(0,10))\n\n\n\n\n\\[\\hat \\theta \\sim MVN(\\theta, I^{-1}(\\theta)) \\]\n\\[\\hat \\theta - \\theta \\sim MVN(0, I^{-1}(\\theta)) \\]\n\\[\\hat \\theta - \\theta \\sim MVN(0, I_O^{-1}(\\hat\\theta)) \\]\n\\[\\hat \\theta - \\theta \\sim MVN(0, - H^{-1}(\\theta)) \\]\n\nmle_samples <- mgcv::rmvn(n = 1000, mu = opt$par, V = solve(opt$hessian))\nplot(mle_samples, xlab = \"a\", ylab = \"b\")\n\n\n\n\n\nplot(t, lambda_vals, type = \"l\", lwd = 2, ylim = c(0,100))  \nfor (i in 1:1000){\n  lines(t, lambda(mle_samples[i,], t), type = \"l\", lwd = 2, ylim = c(0,10), col = rgb(1,0,0,0.01))\n}\nlines(t, lambda_vals,  lwd = 2)  \n\n\n\n\n\nplot(density(x_inhomo))\nlines(t, lambda_vals/(Lambda_A), col = 2, type = \"l\", lwd = 2)"
   }
 ]
