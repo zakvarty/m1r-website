@@ -15,6 +15,69 @@ span.underline{text-decoration: underline;}
 div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -54,6 +117,7 @@ ul.task-list{list-style: none;}
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -104,7 +168,51 @@ ul.task-list{list-style: none;}
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#content" id="toc-content" class="nav-link" data-scroll-target="#content">Content</a></li>
+  <li><a href="#simulating-homogeneous-poisson-processes" id="toc-simulating-homogeneous-poisson-processes" class="nav-link" data-scroll-target="#simulating-homogeneous-poisson-processes">Simulating Homogeneous Poisson Processes</a>
+  <ul class="collapse">
+  <li><a href="#using-the-interval-specification" id="toc-using-the-interval-specification" class="nav-link" data-scroll-target="#using-the-interval-specification">Using the interval specification</a>
+  <ul class="collapse">
+  <li><a href="#outline" id="toc-outline" class="nav-link" data-scroll-target="#outline">Outline</a></li>
+  <li><a href="#approach" id="toc-approach" class="nav-link" data-scroll-target="#approach">Approach</a></li>
+  <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation">Implementation</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#using-the-intensity-specification" id="toc-using-the-intensity-specification" class="nav-link" data-scroll-target="#using-the-intensity-specification">Using the intensity specification</a>
+  <ul class="collapse">
+  <li><a href="#outline-1" id="toc-outline-1" class="nav-link" data-scroll-target="#outline-1">Outline</a></li>
+  <li><a href="#approach-conditional-simulation" id="toc-approach-conditional-simulation" class="nav-link" data-scroll-target="#approach-conditional-simulation">Approach: Conditional Simulation</a></li>
+  <li><a href="#implementation-1" id="toc-implementation-1" class="nav-link" data-scroll-target="#implementation-1">Implementation</a></li>
+  <li><a href="#example-1" id="toc-example-1" class="nav-link" data-scroll-target="#example-1">Example</a></li>
+  </ul></li>
+  <li><a href="#interlude-superposition-and-random-thinning" id="toc-interlude-superposition-and-random-thinning" class="nav-link" data-scroll-target="#interlude-superposition-and-random-thinning">Interlude: Superposition and Random Thinning</a>
+  <ul class="collapse">
+  <li><a href="#superposition-of-point-processes" id="toc-superposition-of-point-processes" class="nav-link" data-scroll-target="#superposition-of-point-processes">Superposition of point processes</a></li>
+  <li><a href="#random-thinning-of-point-processes" id="toc-random-thinning-of-point-processes" class="nav-link" data-scroll-target="#random-thinning-of-point-processes">Random Thinning of Point Processes</a></li>
+  <li><a href="#why-do-we-care" id="toc-why-do-we-care" class="nav-link" data-scroll-target="#why-do-we-care">Why do we care?</a></li>
+  </ul></li>
+  <li><a href="#simulating-inhomogeneous-poisson-processes" id="toc-simulating-inhomogeneous-poisson-processes" class="nav-link" data-scroll-target="#simulating-inhomogeneous-poisson-processes">Simulating Inhomogeneous Poisson Processes</a>
+  <ul class="collapse">
+  <li><a href="#interval-specification" id="toc-interval-specification" class="nav-link" data-scroll-target="#interval-specification">Interval Specification</a>
+  <ul class="collapse">
+  <li><a href="#approach-outline" id="toc-approach-outline" class="nav-link" data-scroll-target="#approach-outline">Approach outline:</a></li>
+  <li><a href="#implementation-2" id="toc-implementation-2" class="nav-link" data-scroll-target="#implementation-2">Implementation</a></li>
+  </ul></li>
+  <li><a href="#intensity-specification" id="toc-intensity-specification" class="nav-link" data-scroll-target="#intensity-specification">Intensity Specification</a>
+  <ul class="collapse">
+  <li><a href="#approach-outline-1" id="toc-approach-outline-1" class="nav-link" data-scroll-target="#approach-outline-1">Approach Outline</a></li>
+  </ul></li>
+  <li><a href="#implementation-3" id="toc-implementation-3" class="nav-link" data-scroll-target="#implementation-3">Implementation</a></li>
+  </ul></li>
+  <li><a href="#suggested-topics-for-part-2" id="toc-suggested-topics-for-part-2" class="nav-link" data-scroll-target="#suggested-topics-for-part-2">Suggested topics for part 2</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -125,10 +233,288 @@ ul.task-list{list-style: none;}
 
 </header>
 
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
 <p>In the first workshop we met the formal definition of the Poisson process and considered some of the properties that follow from this definition.</p>
 <p>In this workshop we will see how those properties can be used to simulate realisations of the point process. We will write our own R functions to generate point patterns from a given Poisson process.</p>
+</section>
+<section id="content" class="level2">
+<h2 class="anchored" data-anchor-id="content">Content</h2>
+<ul>
+<li>The intensity specification allows us to simulate on arbitary spaces</li>
+<li>The interval specification allows us to simulate on <span class="math inline">\(\mathbb{R}\)</span></li>
+<li>The counting specification is not so helpful for simulation purposes.</li>
+</ul>
+</section>
+<section id="simulating-homogeneous-poisson-processes" class="level1">
+<h1>Simulating Homogeneous Poisson Processes</h1>
+<p>Simulate a homogeneous Poisson process with intensity function <span class="math inline">\(\lambda(t) = 0.2\)</span> on the interval <span class="math inline">\(t \in (0,100)\)</span>.</p>
+<section id="using-the-interval-specification" class="level2">
+<h2 class="anchored" data-anchor-id="using-the-interval-specification">Using the interval specification</h2>
+<section id="outline" class="level3">
+<h3 class="anchored" data-anchor-id="outline">Outline</h3>
+<ul>
+<li><p>Recall that we can interpret the intensity function as the local abundance of events per unit time.</p></li>
+<li><p>For a homogeneous process this event rate is the same at all times, and so inter-event times are independent and identically distributed with an Exponential(2/5) distribution.</p></li>
+<li><p>This allows us to simulate the times between events - but what about the time until the first event?</p></li>
+<li><p>Here we can exploit the memoryless property of the exponential distribution, to see that this will have the same distribution.</p></li>
+</ul>
+<p><em><strong>Exercise:</strong> Show that a continuous random variable has the memoryless property, <span class="math inline">\(\Pr(Y &gt; y + a | Y &gt; y) = \Pr(Y &gt; a)\)</span> for all <span class="math inline">\(y, a &gt; 0\)</span>, if and only if it is an exponential random variable.</em></p>
+</section>
+<section id="approach" class="level3">
+<h3 class="anchored" data-anchor-id="approach">Approach</h3>
+<p><strong>Simulation Approach: Discrete Event Simulation</strong></p>
+<ol type="1">
+<li>Start at <span class="math inline">\(t = t_{min}\)</span> and create an empty event set.</li>
+<li>Simulate time until next event</li>
+<li><strong>If</strong> time of next event <span class="math inline">\(&lt; t_{max}\)</span>, then append the time of the next event to the event set and return to (2)</li>
+<li><strong>Else</strong>, end.</li>
+</ol>
+</section>
+<section id="implementation" class="level3">
+<h3 class="anchored" data-anchor-id="implementation">Implementation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>simulate_hpp_by_intervals <span class="ot">&lt;-</span> <span class="cf">function</span>(t_min, t_max, lambda){</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  event_times <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  t_next <span class="ot">&lt;-</span> t_min <span class="sc">+</span> <span class="fu">rexp</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">rate =</span> lambda)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span>(t_next <span class="sc">&lt;=</span> t_max){</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    event_times <span class="ot">&lt;-</span> <span class="fu">c</span>(event_times, t_next)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    t_next <span class="ot">&lt;-</span> t_next <span class="sc">+</span> <span class="fu">rexp</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">rate =</span> lambda)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(event_times)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="example" class="level3">
+<h3 class="anchored" data-anchor-id="example">Example</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lambda_val <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>hpp_1 <span class="ot">&lt;-</span> <span class="fu">simulate_hpp_by_intervals</span>(<span class="at">t_min =</span> <span class="dv">0</span>, <span class="at">t_max =</span> <span class="dv">100</span>, <span class="at">lambda =</span> lambda_val) </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> hpp_1,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(hpp_1)),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>,<span class="dv">100</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"time, t"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">lambda</span> (t)), </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">"n"</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">100</span>,<span class="dv">100</span>,<span class="dv">110</span>),</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,lambda_val,lambda_val,<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="dv">2</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="02-simulation_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="using-the-intensity-specification" class="level1">
+<h1>Using the intensity specification</h1>
+<section id="outline-1" class="level2">
+<h2 class="anchored" data-anchor-id="outline-1">Outline</h2>
+<p>Under the intensity specification we know that <span class="math inline">\(N(A) \sim \text{Pois}(\Lambda(A))\)</span>, where</p>
+<p><span class="math display">\[ \Lambda(A) = \int_A \lambda(t) \mathrm{d}t.\]</span></p>
+<p>That is, the area underneath the intensity function determines the expected number of events that we will see in that region. For a homogeneous intensity function and a region <span class="math inline">\(A\)</span> consisting of a single interval this integral is particularly simple: <span class="math inline">\(\Lambda((t_1, t_2)) = \lambda(t_2 - t_1)\)</span>.</p>
+<p>Given the number of events, we can then simulate their locations. Events in a Poisson process are located randomly across the interval, independently of one another. In the case of a homogeneous Poisson process events are equally likely to occur at any time and so are located uniformly at random over the space. This gives us our second simulation method.</p>
+</section>
+<section id="approach-conditional-simulation" class="level2">
+<h2 class="anchored" data-anchor-id="approach-conditional-simulation">Approach: Conditional Simulation</h2>
+<ol type="1">
+<li>Calculate the integrated intensity <span class="math inline">\(\Lambda\)</span> on the region of interest <span class="math inline">\(A\)</span></li>
+<li>Simulate the number of events in the region</li>
+<li>Conditional of the number of events, locate each event on <span class="math inline">\(A\)</span> independently, by sampling locations independently from the probability density function</li>
+</ol>
+<p><span class="math display">\[ f_X(x) = \frac{\lambda(x)}{\Lambda(A)}\mathbb{I}(x \in A).\]</span></p>
+<p>Note that for a homogeneous process, this simplifies to selecting locations independently and uniformly at random over <span class="math inline">\(A\)</span>.</p>
+</section>
+<section id="implementation-1" class="level2">
+<h2 class="anchored" data-anchor-id="implementation-1">Implementation</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>simulate_hpp_by_intensity <span class="ot">&lt;-</span> <span class="cf">function</span>(t_min, t_max, lambda){</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  n_events <span class="ot">&lt;-</span> <span class="fu">rpois</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">lambda =</span> lambda<span class="sc">*</span>(t_max <span class="sc">-</span> t_min))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  event_times <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="at">n =</span> n_events, <span class="at">min =</span> t_min, <span class="at">max =</span> t_max)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(event_times)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="example-1" class="level2">
+<h2 class="anchored" data-anchor-id="example-1">Example</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lambda_val <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>hpp_2 <span class="ot">&lt;-</span> <span class="fu">simulate_hpp_by_intensity</span>(<span class="at">t_min =</span> <span class="dv">0</span>, <span class="at">t_max =</span> <span class="dv">100</span>, <span class="at">lambda =</span> lambda_val) </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> hpp_2,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(hpp_2)),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>,<span class="dv">100</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"time, t"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">lambda</span> (t)), </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">"n"</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">100</span>,<span class="dv">100</span>,<span class="dv">110</span>),</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,lambda_val,lambda_val,<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="dv">2</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="02-simulation_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><em><strong>Question:</strong> What computational benefit does the simulation based method have over the interval based method? When will this become more important?</em></p>
+<p><em><strong>Question:</strong> What benefit does the interval specification have over the interval specification?</em></p>
+</section>
+</section>
+<section id="interlude-superposition-and-random-thinning" class="level1">
+<h1>Interlude: Superposition and Random Thinning</h1>
+<section id="superposition-of-point-processes" class="level2">
+<h2 class="anchored" data-anchor-id="superposition-of-point-processes">Superposition of point processes</h2>
+<ul>
+<li><p>If <span class="math inline">\(\mathcal{X}_1\)</span> and <span class="math inline">\(\mathcal{X}_2\)</span> are point processes then <span class="math inline">\(\mathcal{X}_3 = \mathcal{X}_1 \cup\mathcal{X}_2\)</span> is the superposition of <span class="math inline">\(\mathcal{X}_1\)</span> and <span class="math inline">\(\mathcal{X}_2\)</span>.</p></li>
+<li><p>If <span class="math inline">\(\mathcal{X}_1\)</span> and <span class="math inline">\(\mathcal{X}_2\)</span> are Poisson processes with rates <span class="math inline">\(\lambda_1(t)\)</span> and <span class="math inline">\(\lambda_2(t)\)</span> then <span class="math inline">\(\mathcal{X}_3\)</span> is a Poisson process with rate <span class="math inline">\(\lambda_3(t) = \lambda_1(t) + \lambda_2(t)\)</span>. <strong>(Proof?)</strong></p></li>
+<li><p>The superposition of any countable number of Poisson processes is a Poisson process. <strong>(Proof?)</strong></p></li>
+<li><p>Under certain regularity conditions, the superposition of independent point processes converges to a Poisson process as the number of processes becomes large. <strong>(Poster idea - Limit Theorems for point processes)</strong></p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> hpp_1,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(hpp_1)),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>,<span class="dv">100</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"time, t"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">lambda</span> (t)), </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">"n"</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> hpp_2, <span class="at">y=</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(hpp_2)), <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="dv">2</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">x=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">100</span>,<span class="dv">100</span>,<span class="dv">110</span>),</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,lambda_val,lambda_val,<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="dv">1</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">x=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">100</span>,<span class="dv">100</span>,<span class="dv">110</span>),</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,lambda_val,lambda_val,<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="dv">2</span>,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span>, </span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">lty =</span> <span class="dv">2</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">x=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">100</span>,<span class="dv">100</span>,<span class="dv">110</span>),</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span><span class="sc">*</span>lambda_val,<span class="dv">2</span><span class="sc">*</span>lambda_val,<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="dv">3</span>,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span>, </span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="02-simulation_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="random-thinning-of-point-processes" class="level2">
+<h2 class="anchored" data-anchor-id="random-thinning-of-point-processes">Random Thinning of Point Processes</h2>
+<ul>
+<li><p>A random thinning pf a point process randomly retains each event in the process with some (possibly time dependent) probability <span class="math inline">\(\rho(t)\)</span>.</p></li>
+<li><p>If <span class="math inline">\(\mathcal{X}_1\)</span> is a Poisson process with intensity function <span class="math inline">\(\lambda_1(t)\)</span> and <span class="math inline">\(\mathcal{X}_2\)</span> is <span class="math inline">\(\mathcal{X}_1\)</span> thinned with <span class="math inline">\(\rho(t)\)</span>, then <span class="math inline">\(\mathcal{X}_2\)</span> is also a Poisson process with intensity function <span class="math inline">\(\lambda_2(t) = \lambda_1(t)\rho(t)\)</span>. <strong>(Proof?)</strong></p></li>
+<li><p>This is just the complement of what we saw with superpositions. Consider processes with different “types” of event. <strong>(Poster idea: Multi-type Point Processes)</strong></p></li>
+</ul>
+</section>
+<section id="why-do-we-care" class="level2">
+<h2 class="anchored" data-anchor-id="why-do-we-care">Why do we care?</h2>
+<p>It is nice and interesting to know that Poisson processes are invariant to superposition and random thinning.</p>
+<p>These properties will be key to simlating inhomogeneous Poisson processes.</p>
+</section>
+</section>
+<section id="simulating-inhomogeneous-poisson-processes" class="level1">
+<h1>Simulating Inhomogeneous Poisson Processes</h1>
+<section id="interval-specification" class="level2">
+<h2 class="anchored" data-anchor-id="interval-specification">Interval Specification</h2>
+<p>When the intensity function is not constant, the exponential parameter describing the rate of events changes depending on where you are on the time axis.</p>
+<p><span class="math display">\[ \Pr(T_\tau \leq t) = 1 - \exp\left\{-\int_\tau^{\tau+t} \lambda(t) \mathrm{d}t\right\}\]</span></p>
+<section id="approach-outline" class="level3">
+<h3 class="anchored" data-anchor-id="approach-outline">Approach outline:</h3>
+<p>This approach is closely linked to <em>the probability integral transform</em> and the <em>time rescaling theorem for point processes</em>. <strong>(Poster idea: TRT and its applications)</strong></p>
+<ul>
+<li><p>If X is a random variable with monotonically increasing CDF <span class="math inline">\(F_X(x)\)</span> then <span class="math inline">\(F_X(X) \overset{D}{=} U \sim \text{Uniform}[0,1]\)</span>.</p></li>
+<li><p>Conversely, since <span class="math inline">\(F_X(x)\)</span> is monotonically increasing, <span class="math inline">\(F_X(x)\)</span> has a unique inverse <span class="math inline">\(F^{-1}_X(x)\)</span> and <span class="math inline">\(F^{-1}_X(U) \overset{D}{=} X\)</span>.</p></li>
+</ul>
+<hr>
+<p><strong>Picture on Board</strong> - See Nelson book for further details.</p>
+<hr>
+<p>The approach proceeds much as for the homogeneous case, but now sampling the time until the next event is more challenging.</p>
+<ol type="1">
+<li>Simulate u from a Uniform[0,1] distribution</li>
+<li>Find <span class="math inline">\(t\)</span> such that <span class="math inline">\(Pr(T_\tau &gt; t) = u\)</span></li>
+</ol>
+<p><span class="math display">\[ \Pr(T_\tau \leq t) = u =  1 - \exp\left\{-\int_\tau^{\tau+t} \lambda(t) \mathrm{d}t\right\}\]</span></p>
+<p>Solving this integral equation can be challenging and will typically require the use of numerical methods.</p>
+</section>
+<section id="implementation-2" class="level3">
+<h3 class="anchored" data-anchor-id="implementation-2">Implementation</h3>
+<p><strong>(Poster idea - Implement this approach and describe the challenges)</strong></p>
+</section>
+</section>
+<section id="intensity-specification" class="level2">
+<h2 class="anchored" data-anchor-id="intensity-specification">Intensity Specification</h2>
+<section id="approach-outline-1" class="level3">
+<h3 class="anchored" data-anchor-id="approach-outline-1">Approach Outline</h3>
+<p>This idea is analogous to <strong>rejection sampling</strong>, a technique to sample from random variables with arbitrary but bounded density functions.</p>
+<ol type="1">
+<li>Find <span class="math inline">\(\lambda^* \geq \sup_A \lambda(t)\)</span></li>
+<li>Simulate a homogeneous Poisson process on <span class="math inline">\(A\)</span> with intensity <span class="math inline">\(\lambda^*\)</span></li>
+<li>Randomly thin the homogeneous process with <span class="math inline">\(\rho(t) = \lambda(t)/\lambda^*\)</span></li>
+</ol>
+<p><strong>Example:</strong> <span class="math inline">\(\lambda(t) = \frac{3}{2} \sin(t) + 3\)</span>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="02-simulation_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Question:</strong> When is this algorithm most efficient?</p>
+<p><strong>Question:</strong> For what type of intensity function is this algorithm very inefficient?</p>
+<p><strong>Poster idea:</strong> How to simulate from point processes where the intensity has asymptotes?</p>
+<p><strong>Poster idea:</strong> How could you improve the efficiency in those cases?</p>
+<p><strong>Poster idea:</strong> Perfect simulation of point processes.</p>
+</section>
+</section>
+<section id="implementation-3" class="level2">
+<h2 class="anchored" data-anchor-id="implementation-3">Implementation</h2>
+<p>Exercise for second part of session.</p>
+</section>
+</section>
+<section id="suggested-topics-for-part-2" class="level1">
+<h1>Suggested topics for part 2</h1>
+<ol type="1">
+<li>Write your own code to simulate from a Poisson process that has intensity</li>
+</ol>
+<ul>
+<li><p><span class="math inline">\(\lambda(t) = \lambda\)</span></p></li>
+<li><p><span class="math inline">\(\lambda(t) = a sin(\omega t) + b \cos(\phi t)\)</span></p></li>
+<li><p><span class="math inline">\(\lambda(t) = k\frac{\beta^\alpha}{\Gamma(\alpha)} t ^{\alpha - 1} \exp\{- \beta t\}\mathbb{I}(t &gt; 0)\)</span> for constants, <span class="math inline">\(\alpha, \beta,\)</span> and <span class="math inline">\(k\)</span>.</p></li>
+<li><p><span class="math inline">\(\lambda(t) = k\frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha)} (t - t_{min}) ^{\alpha - 1} (t_{max} - t)^\beta \mathbb{I}(t \in (t_{min}, t_{max}))\)</span> for constants, <span class="math inline">\(\alpha, \beta,\)</span> and <span class="math inline">\(k\)</span>.</p></li>
+</ul>
+<ol start="2" type="1">
+<li><p>Investigate how to simulate homogeneous and inhomogeneous Poisson processes on <span class="math inline">\(\mathbb{R}^2\)</span></p></li>
+<li><p>Explore situations in which the above methods do not work. Are there ways to fix those edge cases?</p></li>
+</ol>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -39,13 +39,97 @@
     "href": "02-simulation.html",
     "title": "Workshop 2: Simulation",
     "section": "",
-    "text": "In this workshop we will see how those properties can be used to simulate realisations of the point process. We will write our own R functions to generate point patterns from a given Poisson process."
+    "text": "In the first workshop we met the formal definition of the Poisson process and considered some of the properties that follow from this definition.\nIn this workshop we will see how those properties can be used to simulate realisations of the point process. We will write our own R functions to generate point patterns from a given Poisson process."
   },
   {
     "objectID": "03-inference.html",
     "href": "03-inference.html",
     "title": "Workshop 3: Inference",
     "section": "",
-    "text": "In this workshop we will consider the reverse problem: given one (or more) point patterns generated from a Poisson process, how can we estimate the unknown intensity that generated those points?"
+    "text": "In the previous workshop we considered how to generate realisations from a given point process when we know its intensity function.\nIn this workshop we will consider the reverse problem: given one (or more) point patterns generated from a Poisson process, how can we estimate the unknown intensity that generated those points?\n\n\n\nlambda <- function(theta, time){\n theta[1] * sin(time) + theta[2]\n}\n\nLambda <- function(theta, time){\n - theta[1] * cos(time) + theta[2] * time \n}\n\n\nt_min <- pi\nt_max <- 5*pi \ntheta_true = c(40, 50)\nlambda_max <- 90\n\nt <- seq(t_min, t_max, length.out = 1001)\nlambda_vals <- lambda(theta = theta_true, time =  t)\n\nplot(t, lambda_vals, type = \"l\", lwd = 2, ylim = c(0,100))\n\n\n\n\n\nn_homo <- rpois(n = 1, lambda = lambda_max * (t_max - t_min))\nx_homo <- runif(n = n_homo, min = t_min, max = t_max)\n\nLambda_A <- Lambda(theta_true, t_max) - Lambda(theta_true, t_min)\nprob_keep <- lambda(theta = theta_true, time = x_homo) / lambda_max\nis_kept <- rbinom(n = n_homo, size = 1, prob = prob_keep)\n\nx_inhomo <- x_homo[is_kept == 1]\nn_inhomo <- length(x_inhomo)\n\nplot(t, lambda_vals, type = \"l\", lwd = 2, ylim = c(0,100)) \npoints(x = x_inhomo, y = rep(0, n_inhomo), pch = 16, col = rgb(0,0,0,0.2))\n\n\n\n\n\n# Negative log-liklihood \n\nnllh_ihpp <- function(theta, x, A){\n  if(theta[1] > theta[2]) return(1e8)\n  \n  # Integral term \n  Lambda_term <- Lambda(theta, A[2]) - Lambda(theta, A[1])\n  # Intensity term\n  lambda_term <- - sum(log(lambda(theta, time = x))) \n  #\n  \n  return(lambda_term + Lambda_term)\n}\n\n# Evaluate for lambda = 0 * sin(t) + 5\nnllh_ihpp( theta = c(0, 5), x = x_inhomo, A = c(pi, 5*pi))\n\n[1] -944.6763\n\n\n\nopt <- optim(\n  par = c(0,5), # starting parameter values\n  fn = nllh_ihpp,\n  method = \"L-BFGS-B\",\n  hessian = TRUE,\n  A = c(t_min, t_max),\n  x = x_inhomo\n  )\n\nopt\n\n$par\n[1] 36.66265 49.81543\n\n$value\n[1] -1916.122\n\n$counts\nfunction gradient \n      13       13 \n\n$convergence\n[1] 0\n\n$message\n[1] \"CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH\"\n\n$hessian\n           [,1]       [,2]\n[1,]  0.2291052 -0.1686144\n[2,] -0.1686144  0.3763540\n\n\n\nfitted_intensity <- lambda(theta = opt$par, time = t)\n\nplot(t, lambda_vals, type = \"l\", lwd = 2, ylim = c(0,100)) \npoints(x = x_inhomo, y = rep(0, n_inhomo), pch = 16) \nlines(t, fitted_intensity, col = 2, type = \"l\", lwd = 2, ylim = c(0,10))\n\n\n\n\n\\[\\hat \\theta \\sim MVN(\\theta, I^{-1}(\\theta)) \\]\n\\[\\hat \\theta - \\theta \\sim MVN(0, I^{-1}(\\theta)) \\]\n\\[\\hat \\theta - \\theta \\sim MVN(0, I_O^{-1}(\\hat\\theta)) \\]\n\\[\\hat \\theta - \\theta \\sim MVN(0, - H^{-1}(\\theta)) \\]\n\nmle_samples <- mgcv::rmvn(n = 1000, mu = opt$par, V = solve(opt$hessian))\nplot(mle_samples, xlab = \"a\", ylab = \"b\")\n\n\n\n\n\nplot(t, lambda_vals, type = \"l\", lwd = 2, ylim = c(0,100))  \nfor (i in 1:1000){\n  lines(t, lambda(mle_samples[i,], t), type = \"l\", lwd = 2, ylim = c(0,10), col = rgb(1,0,0,0.01))\n}\nlines(t, lambda_vals,  lwd = 2)  \n\n\n\n\n\nplot(density(x_inhomo))\nlines(t, lambda_vals/(Lambda_A), col = 2, type = \"l\", lwd = 2)"
+  },
+  {
+    "objectID": "02-simulation.html#content",
+    "href": "02-simulation.html#content",
+    "title": "Workshop 2: Simulation",
+    "section": "Content",
+    "text": "Content\n\nThe intensity specification allows us to simulate on arbitary spaces\nThe interval specification allows us to simulate on \\(\\mathbb{R}\\)\nThe counting specification is not so helpful for simulation purposes."
+  },
+  {
+    "objectID": "02-simulation.html#using-the-interval-specification",
+    "href": "02-simulation.html#using-the-interval-specification",
+    "title": "Workshop 2: Simulation",
+    "section": "Using the interval specification",
+    "text": "Using the interval specification\n\nOutline\n\nRecall that we can interpret the intensity function as the local abundance of events per unit time.\nFor a homogeneous process this event rate is the same at all times, and so inter-event times are independent and identically distributed with an Exponential(2/5) distribution.\nThis allows us to simulate the times between events - but what about the time until the first event?\nHere we can exploit the memoryless property of the exponential distribution, to see that this will have the same distribution.\n\nExercise: Show that a continuous random variable has the memoryless property, \\(\\Pr(Y > y + a | Y > y) = \\Pr(Y > a)\\) for all \\(y, a > 0\\), if and only if it is an exponential random variable.\n\n\nApproach\nSimulation Approach: Discrete Event Simulation\n\nStart at \\(t = t_{min}\\) and create an empty event set.\nSimulate time until next event\nIf time of next event \\(< t_{max}\\), then append the time of the next event to the event set and return to (2)\nElse, end.\n\n\n\nImplementation\n\nsimulate_hpp_by_intervals <- function(t_min, t_max, lambda){\n  event_times <- c()\n  \n  t_next <- t_min + rexp(n = 1, rate = lambda)\n  \n  while(t_next <= t_max){\n    event_times <- c(event_times, t_next)\n    t_next <- t_next + rexp(n = 1, rate = lambda)\n  }\n  \n  return(event_times)\n}\n\n\n\nExample\n\nlambda_val <- 0.2\nhpp_1 <- simulate_hpp_by_intervals(t_min = 0, t_max = 100, lambda = lambda_val) \n\nplot(\n  x = hpp_1,\n  y = rep(0, length(hpp_1)),\n  pch = 16,\n  xlim = c(-10,100),\n  ylim = c(0,1),\n  xlab = \"time, t\",\n  ylab = expression(lambda (t)), \n  bty = \"n\"\n)\nlines(\n  x=c(-10,0,0,100,100,110),\n  y = c(0,0,lambda_val,lambda_val,0,0),\n  col = 2,\n  lwd = 2\n)"
+  },
+  {
+    "objectID": "02-simulation.html#outline-1",
+    "href": "02-simulation.html#outline-1",
+    "title": "Workshop 2: Simulation",
+    "section": "Outline",
+    "text": "Outline\nUnder the intensity specification we know that \\(N(A) \\sim \\text{Pois}(\\Lambda(A))\\), where\n\\[ \\Lambda(A) = \\int_A \\lambda(t) \\mathrm{d}t.\\]\nThat is, the area underneath the intensity function determines the expected number of events that we will see in that region. For a homogeneous intensity function and a region \\(A\\) consisting of a single interval this integral is particularly simple: \\(\\Lambda((t_1, t_2)) = \\lambda(t_2 - t_1)\\).\nGiven the number of events, we can then simulate their locations. Events in a Poisson process are located randomly across the interval, independently of one another. In the case of a homogeneous Poisson process events are equally likely to occur at any time and so are located uniformly at random over the space. This gives us our second simulation method."
+  },
+  {
+    "objectID": "02-simulation.html#approach-conditional-simulation",
+    "href": "02-simulation.html#approach-conditional-simulation",
+    "title": "Workshop 2: Simulation",
+    "section": "Approach: Conditional Simulation",
+    "text": "Approach: Conditional Simulation\n\nCalculate the integrated intensity \\(\\Lambda\\) on the region of interest \\(A\\)\nSimulate the number of events in the region\nConditional of the number of events, locate each event on \\(A\\) independently, by sampling locations independently from the probability density function\n\n\\[ f_X(x) = \\frac{\\lambda(x)}{\\Lambda(A)}\\mathbb{I}(x \\in A).\\]\nNote that for a homogeneous process, this simplifies to selecting locations independently and uniformly at random over \\(A\\)."
+  },
+  {
+    "objectID": "02-simulation.html#implementation-1",
+    "href": "02-simulation.html#implementation-1",
+    "title": "Workshop 2: Simulation",
+    "section": "Implementation",
+    "text": "Implementation\n\nsimulate_hpp_by_intensity <- function(t_min, t_max, lambda){\n  \n  n_events <- rpois(n = 1, lambda = lambda*(t_max - t_min))\n  \n  event_times <- runif(n = n_events, min = t_min, max = t_max)\n  \n  return(event_times)\n}"
+  },
+  {
+    "objectID": "02-simulation.html#example-1",
+    "href": "02-simulation.html#example-1",
+    "title": "Workshop 2: Simulation",
+    "section": "Example",
+    "text": "Example\n\nlambda_val <- 0.2\nhpp_2 <- simulate_hpp_by_intensity(t_min = 0, t_max = 100, lambda = lambda_val) \n\nplot(\n  x = hpp_2,\n  y = rep(0, length(hpp_2)),\n  pch = 16,\n  xlim = c(-10,100),\n  ylim = c(0,1),\n  xlab = \"time, t\",\n  ylab = expression(lambda (t)), \n  bty = \"n\"\n)\nlines(\n  x=c(-10,0,0,100,100,110),\n  y = c(0,0,lambda_val,lambda_val,0,0),\n  col = 2,\n  lwd = 2\n)\n\n\n\n\nQuestion: What computational benefit does the simulation based method have over the interval based method? When will this become more important?\nQuestion: What benefit does the interval specification have over the interval specification?"
+  },
+  {
+    "objectID": "02-simulation.html#superposition-of-point-processes",
+    "href": "02-simulation.html#superposition-of-point-processes",
+    "title": "Workshop 2: Simulation",
+    "section": "Superposition of point processes",
+    "text": "Superposition of point processes\n\nIf \\(\\mathcal{X}_1\\) and \\(\\mathcal{X}_2\\) are point processes then \\(\\mathcal{X}_3 = \\mathcal{X}_1 \\cup\\mathcal{X}_2\\) is the superposition of \\(\\mathcal{X}_1\\) and \\(\\mathcal{X}_2\\).\nIf \\(\\mathcal{X}_1\\) and \\(\\mathcal{X}_2\\) are Poisson processes with rates \\(\\lambda_1(t)\\) and \\(\\lambda_2(t)\\) then \\(\\mathcal{X}_3\\) is a Poisson process with rate \\(\\lambda_3(t) = \\lambda_1(t) + \\lambda_2(t)\\). (Proof?)\nThe superposition of any countable number of Poisson processes is a Poisson process. (Proof?)\nUnder certain regularity conditions, the superposition of independent point processes converges to a Poisson process as the number of processes becomes large. (Poster idea - Limit Theorems for point processes)\n\n\nplot(\n  x = hpp_1,\n  y = rep(0, length(hpp_1)),\n  pch = 16,\n  xlim = c(-10,100),\n  ylim = c(0,1),\n  xlab = \"time, t\",\n  ylab = expression(lambda (t)), \n  bty = \"n\"\n)\npoints(x = hpp_2, y= rep(0, length(hpp_2)), pch = 16, col = 2)\n\nlines(\n  x=c(-10,0,0,100,100,110),\n  y = c(0,0,lambda_val,lambda_val,0,0),\n  col = 1,\n  lwd = 2\n)\nlines(\n  x=c(-10,0,0,100,100,110),\n  y = c(0,0,lambda_val,lambda_val,0,0),\n  col = 2,\n  lwd = 2, \n  lty = 2\n)\nlines(\n  x=c(-10,0,0,100,100,110),\n  y = c(0,0,2*lambda_val,2*lambda_val,0,0),\n  col = 3,\n  lwd = 2, \n)"
+  },
+  {
+    "objectID": "02-simulation.html#random-thinning-of-point-processes",
+    "href": "02-simulation.html#random-thinning-of-point-processes",
+    "title": "Workshop 2: Simulation",
+    "section": "Random Thinning of Point Processes",
+    "text": "Random Thinning of Point Processes\n\nA random thinning pf a point process randomly retains each event in the process with some (possibly time dependent) probability \\(\\rho(t)\\).\nIf \\(\\mathcal{X}_1\\) is a Poisson process with intensity function \\(\\lambda_1(t)\\) and \\(\\mathcal{X}_2\\) is \\(\\mathcal{X}_1\\) thinned with \\(\\rho(t)\\), then \\(\\mathcal{X}_2\\) is also a Poisson process with intensity function \\(\\lambda_2(t) = \\lambda_1(t)\\rho(t)\\). (Proof?)\nThis is just the complement of what we saw with superpositions. Consider processes with different “types” of event. (Poster idea: Multi-type Point Processes)"
+  },
+  {
+    "objectID": "02-simulation.html#why-do-we-care",
+    "href": "02-simulation.html#why-do-we-care",
+    "title": "Workshop 2: Simulation",
+    "section": "Why do we care?",
+    "text": "Why do we care?\nIt is nice and interesting to know that Poisson processes are invariant to superposition and random thinning.\nThese properties will be key to simlating inhomogeneous Poisson processes."
+  },
+  {
+    "objectID": "02-simulation.html#interval-specification",
+    "href": "02-simulation.html#interval-specification",
+    "title": "Workshop 2: Simulation",
+    "section": "Interval Specification",
+    "text": "Interval Specification\nWhen the intensity function is not constant, the exponential parameter describing the rate of events changes depending on where you are on the time axis.\n\\[ \\Pr(T_\\tau \\leq t) = 1 - \\exp\\left\\{-\\int_\\tau^{\\tau+t} \\lambda(t) \\mathrm{d}t\\right\\}\\]\n\nApproach outline:\nThis approach is closely linked to the probability integral transform and the time rescaling theorem for point processes. (Poster idea: TRT and its applications)\n\nIf X is a random variable with monotonically increasing CDF \\(F_X(x)\\) then \\(F_X(X) \\overset{D}{=} U \\sim \\text{Uniform}[0,1]\\).\nConversely, since \\(F_X(x)\\) is monotonically increasing, \\(F_X(x)\\) has a unique inverse \\(F^{-1}_X(x)\\) and \\(F^{-1}_X(U) \\overset{D}{=} X\\).\n\n\nPicture on Board - See Nelson book for further details.\n\nThe approach proceeds much as for the homogeneous case, but now sampling the time until the next event is more challenging.\n\nSimulate u from a Uniform[0,1] distribution\nFind \\(t\\) such that \\(Pr(T_\\tau > t) = u\\)\n\n\\[ \\Pr(T_\\tau \\leq t) = u =  1 - \\exp\\left\\{-\\int_\\tau^{\\tau+t} \\lambda(t) \\mathrm{d}t\\right\\}\\]\nSolving this integral equation can be challenging and will typically require the use of numerical methods.\n\n\nImplementation\n(Poster idea - Implement this approach and describe the challenges)"
+  },
+  {
+    "objectID": "02-simulation.html#intensity-specification",
+    "href": "02-simulation.html#intensity-specification",
+    "title": "Workshop 2: Simulation",
+    "section": "Intensity Specification",
+    "text": "Intensity Specification\n\nApproach Outline\nThis idea is analogous to rejection sampling, a technique to sample from random variables with arbitrary but bounded density functions.\n\nFind \\(\\lambda^* \\geq \\sup_A \\lambda(t)\\)\nSimulate a homogeneous Poisson process on \\(A\\) with intensity \\(\\lambda^*\\)\nRandomly thin the homogeneous process with \\(\\rho(t) = \\lambda(t)/\\lambda^*\\)\n\nExample: \\(\\lambda(t) = \\frac{3}{2} \\sin(t) + 3\\).\n\n\n\n\n\nQuestion: When is this algorithm most efficient?\nQuestion: For what type of intensity function is this algorithm very inefficient?\nPoster idea: How to simulate from point processes where the intensity has asymptotes?\nPoster idea: How could you improve the efficiency in those cases?\nPoster idea: Perfect simulation of point processes."
+  },
+  {
+    "objectID": "02-simulation.html#implementation-3",
+    "href": "02-simulation.html#implementation-3",
+    "title": "Workshop 2: Simulation",
+    "section": "Implementation",
+    "text": "Implementation\nExercise for second part of session."
   }
 ]
